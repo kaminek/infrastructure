@@ -1,0 +1,11 @@
+---
+packages:
+  - hdparm
+  - htop
+  - socat
+  - python3-pip
+  - python3-yaml
+  - helm
+pip_packages:
+  - selinux
+  - kubernetes

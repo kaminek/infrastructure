@@ -1,0 +1,10 @@
+---
+all:
+  children:
+    k3s-cluster:
+      children:
+        controllers:
+          hosts:
+        workers:
+          hosts:
+            node1.home-cluster.local:
