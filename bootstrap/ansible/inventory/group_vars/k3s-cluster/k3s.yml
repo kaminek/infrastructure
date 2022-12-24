@@ -1,0 +1,74 @@
+---
+#
+# Below vars are for the xanmanning.k3s role
+# ...see https://github.com/PyratLabs/ansible-role-k3s
+#
+# https://rancher.com/docs/k3s/latest/en/installation/install-options/server-config/
+
+# (string) Use a specific version of k3s
+# renovate: datasource=github-releases depName=k3s-io/k3s
+k3s_release_version: "v1.24.8+k3s1"
+
+# (bool) Install using hard links rather than symbolic links.
+k3s_install_hard_links: true
+
+# (bool) Escalate user privileges for all tasks
+k3s_become: true
+
+# (bool) Enable debug logging on the k3s service
+k3s_debug: false
+
+# (bool) Allow the use of unsupported configurations in k3s
+k3s_use_unsupported_config: true
+
+# (dict) k3s settings for all control-plane nodes
+k3s_server:
+  node-ip: "{{ ansible_host }}"
+  # Disable Docker - this will use the default containerd CRI
+  docker: false
+  flannel-backend: "none" # This needs to be in quotes
+  disable:
+    - flannel
+    - traefik
+    - servicelb
+    - metrics-server
+    # - local-storage
+  disable-network-policy: true
+  disable-cloud-controller: true
+  write-kubeconfig-mode: "644"
+  # Network CIDR to use for pod IPs
+  cluster-cidr: "10.42.0.0/16"
+  # Network CIDR to use for service IPs
+  service-cidr: "10.43.0.0/16"
+  kubelet-arg:
+    # Allow pods to be rescheduled quicker in the case of a node failure
+    # https://github.com/k3s-io/k3s/issues/1264
+    - "node-status-update-frequency=4s"
+  kube-controller-manager-arg:
+    # Required to monitor component with kube-prometheus-stack
+    - "bind-address=0.0.0.0"
+    # Allow pods to be rescheduled quicker in the case of a node failure
+    # https://github.com/k3s-io/k3s/issues/1264
+    - "node-monitor-period=4s"
+    - "node-monitor-grace-period=16s"
+    - "pod-eviction-timeout=20s"
+  kube-proxy-arg:
+    # Required to monitor component with kube-prometheus-stack
+    - "metrics-bind-address=0.0.0.0"
+  kube-scheduler-arg:
+    # Required to monitor component with kube-prometheus-stack
+    - "bind-address=0.0.0.0"
+  kube-apiserver-arg:
+    # XXX: Enable the audit log
+    # - "--audit-log-path=/var/lib/rancher/k3s/server/audit.log"
+    # - "--audit-policy-file=/var/lib/rancher/k3s/server/audit.yaml"
+    # - "--audit-log-maxage=2"
+    # Required for HAProxy health-checks
+    - "anonymous-auth=true"
+    # Allow pods to be rescheduled quicker in the case of a node failure
+    # https://github.com/k3s-io/k3s/issues/1264
+    - "default-not-ready-toleration-seconds=20"
+    - "default-unreachable-toleration-seconds=20"
+
+# cilium chart values
+k3s_cilium_chart_version: v1.12.4

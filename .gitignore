@@ -1,0 +1,13 @@
+# terraform
+.terraform
+# ansible
+.ansible
+# sops
+.decrypted~*
+*.agekey
+*.pub
+*.key
+*.pem
+# kubernetes
+kubeconfig*
+kubernetes/local
