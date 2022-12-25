@@ -100,7 +100,7 @@ spec:
           limits:
             memory: 1000Mi
         remoteWrite:
-          url: "${GRAFANA_PROMETHEUS_URL}"
-          basicAuth:
-            username: "${GRAFANA_USERNAME}"
-            password: "${GRAFANA_PASSWORD}"
+          - url: "${GRAFANA_PROMETHEUS_URL}"
+            basicAuth:
+              username: "${GRAFANA_USERNAME}"
+              password: "${GRAFANA_PASSWORD}"
