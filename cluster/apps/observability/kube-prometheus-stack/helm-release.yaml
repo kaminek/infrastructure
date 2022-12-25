@@ -102,5 +102,5 @@ spec:
         remoteWrite:
           - url: "${GRAFANA_PROMETHEUS_URL}"
             basicAuth:
-              username: "${GRAFANA_USERNAME}"
+              username: "682023"
               password: "${GRAFANA_PASSWORD}"
