@@ -1,0 +1,31 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./actions-runner-controller.yaml
+  - ./aqua.yaml
+  - ./backube.yaml
+  - ./bitnami.yaml
+  - ./bjw-s.yaml
+  - ./calico.yaml
+  - ./cloudnative-pg.yaml
+  - ./csi-driver-nfs.yaml
+  - ./descheduler.yaml
+  - ./emqx.yaml
+  - ./external-dns.yaml
+  - ./external-secrets.yaml
+  - ./grafana.yaml
+  - ./hajimari.yaml
+  - ./ingress-nginx.yaml
+  - ./jetstack.yaml
+  - ./kyverno.yaml
+  - ./metrics-server.yaml
+  - ./node-feature-discovery.yaml
+  - ./piraeus.yaml
+  - ./prometheus-community.yaml
+  - ./redis-operator.yaml
+  - ./rook-ceph.yaml
+  - ./stakater.yaml
+  - ./tf-controller.yaml
+  - ./weave-gitops.yaml
