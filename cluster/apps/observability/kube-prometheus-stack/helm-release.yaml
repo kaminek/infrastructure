@@ -102,5 +102,9 @@ spec:
         remoteWrite:
           - url: "${GRAFANA_PROMETHEUS_URL}"
             basicAuth:
-              username: "682023"
-              password: "${GRAFANA_PASSWORD}"
+              username:
+                key: GRAFANA_USERNAME
+                name: grafana-creds
+              password:
+                key: GRAFANA_PASSWORD
+                name: grafana-creds
