@@ -69,7 +69,6 @@ spec:
     #     - 192.168.42.10
     #     - 192.168.42.11
     #     - 192.168.42.12
-    prometheus:
 
     prometheusOperator:
       enabled: true
@@ -81,6 +80,8 @@ spec:
           enabled: false
       ingress:
         enabled: false
+
+    prometheus:
       prometheusSpec:
         replicas: 1
         replicaExternalLabelName: __replica__
