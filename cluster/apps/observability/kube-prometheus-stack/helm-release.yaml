@@ -70,6 +70,15 @@ spec:
     #     - 192.168.42.11
     #     - 192.168.42.12
     prometheus:
+
+    prometheusOperator:
+      enabled: true
+      tls:
+        enabled: false
+      admissionWebhooks:
+        enabled: false
+        patch:
+          enabled: false
       ingress:
         enabled: false
       prometheusSpec:
