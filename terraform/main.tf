@@ -11,7 +11,8 @@ resource "upcloud_server" "worker" {
   zone     = "uk-lon1"
 
   template {
-    storage = "Ubuntu Server 22.04 LTS (Jammy Jellyfish)"
+    storage = "01000000-0000-4000-8000-000030220200"
+    size    = 80
   }
 
   network_interface {
