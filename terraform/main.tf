@@ -27,4 +27,6 @@ resource "upcloud_server" "worker" {
   login {
     keys = data.github_user.kaminek.ssh_keys
   }
+
+  metadata = true
 }
