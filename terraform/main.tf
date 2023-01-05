@@ -7,12 +7,12 @@ locals {
 resource "upcloud_server" "worker" {
   count    = local.fleet_count
   plan     = local.flavour
-  hostname = "worker${count.index}"
+  hostname = "node${count.index}"
   zone     = "uk-lon1"
 
   template {
     storage = "01000000-0000-4000-8000-000030220200"
-    size    = 80
+    size    = 40
   }
 
   network_interface {
