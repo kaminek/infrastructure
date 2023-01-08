@@ -26,7 +26,7 @@ resource "upcloud_server" "worker" {
     source_ip_filtering = false
     ip_address_family   = "IPv4"
     network             = upcloud_network.k8s_vpc.id
-    ip_address          = "10.8.0.${count.index + 1}"
+    ip_address          = "10.8.0.${count.index + 1}0"
   }
 
   labels = {
