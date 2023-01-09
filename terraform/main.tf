@@ -48,7 +48,7 @@ resource "upcloud_network" "k8s_vpc" {
 
   ip_network {
     address            = "10.8.0.0/24"
-    dhcp               = false
+    dhcp               = true
     dhcp_default_route = false
     family             = "IPv4"
   }
