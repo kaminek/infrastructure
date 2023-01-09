@@ -13,7 +13,7 @@ k3s_release_version: "v1.24.8+k3s1"
 k3s_install_hard_links: true
 
 # (bool) Escalate user privileges for all tasks
-k3s_become: true
+k3s_become: false
 
 # (bool) Enable debug logging on the k3s service
 k3s_debug: false
@@ -21,9 +21,13 @@ k3s_debug: false
 # (bool) Allow the use of unsupported configurations in k3s
 k3s_use_unsupported_config: true
 
+# use ha controllers
+k3s_control_node: true
+k3s_etcd_datastore: true
+
 # (dict) k3s settings for all control-plane nodes
 k3s_server:
-  node-ip: "{{ ansible_host }}"
+  node-ip: "{{ vpc_private_ipv4_address }}"
   # Disable Docker - this will use the default containerd CRI
   docker: false
   flannel-backend: "none" # This needs to be in quotes
@@ -35,7 +39,7 @@ k3s_server:
     # - local-storage
   disable-network-policy: true
   disable-cloud-controller: true
-  write-kubeconfig-mode: "644"
+  write-kubeconfig-mode: "400"
   # Network CIDR to use for pod IPs
   cluster-cidr: "10.42.0.0/16"
   # Network CIDR to use for service IPs
@@ -43,13 +47,13 @@ k3s_server:
   kubelet-arg:
     # Allow pods to be rescheduled quicker in the case of a node failure
     # https://github.com/k3s-io/k3s/issues/1264
-    - "node-status-update-frequency=4s"
+    - "node-status-update-frequency=10s"
   kube-controller-manager-arg:
     # Required to monitor component with kube-prometheus-stack
     - "bind-address=0.0.0.0"
     # Allow pods to be rescheduled quicker in the case of a node failure
     # https://github.com/k3s-io/k3s/issues/1264
-    - "node-monitor-period=4s"
+    - "node-monitor-period=15s"
     - "node-monitor-grace-period=16s"
     - "pod-eviction-timeout=20s"
   kube-proxy-arg:
@@ -64,7 +68,7 @@ k3s_server:
     # - "--audit-policy-file=/var/lib/rancher/k3s/server/audit.yaml"
     # - "--audit-log-maxage=2"
     # Required for HAProxy health-checks
-    - "anonymous-auth=true"
+    - "anonymous-auth=false" # true
     # Allow pods to be rescheduled quicker in the case of a node failure
     # https://github.com/k3s-io/k3s/issues/1264
     - "default-not-ready-toleration-seconds=20"

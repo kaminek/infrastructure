@@ -1,6 +1,6 @@
 ---
 - hosts:
-    - k3s-cluster
+    - homelab
   become: false
   gather_facts: true
   any_errors_fatal: true
@@ -67,11 +67,13 @@
             value: "true"
 
     - name: Add stable chart repo
+      run_once: true
       kubernetes.core.helm_repository:
         name: cilium
         repo_url: "https://helm.cilium.io/"
 
     - name: Deploy a custom CNI (Cilium)
+      run_once: true
       kubernetes.core.helm:
         name: cilium
         release_namespace: kube-system

@@ -1,0 +1,18 @@
+os_packages:
+  - hdparm
+  - htop
+  - socat
+  - python3-pip
+  - python3-yaml
+  - helm
+pip_packages:
+  - selinux
+  - kubernetes
+# os hardening
+os_selinux_state: permissive
+os_selinux_policy: targeted
+ufw_manage_defaults: false
+os_rhosts_enabled: false
+# ssh hardening
+network_ipv6_enable: false
+ssh_permit_root_login: "yes"

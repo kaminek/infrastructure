@@ -1,10 +1,14 @@
 ---
 all:
   children:
-    k3s-cluster:
+    vpc:
       children:
-        controllers:
-          hosts:
-        workers:
-          hosts:
-            node1.home-cluster.local:
+        homelab:
+          children:
+            controllers:
+              hosts:
+                node0.homelab.local:
+                node1.homelab.local:
+                node2.homelab.local:
+            # workers:
+            #   hosts:
