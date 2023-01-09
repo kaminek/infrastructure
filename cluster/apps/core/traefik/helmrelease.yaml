@@ -1,0 +1,56 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: traefik
+  namespace: traefik
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: traefik
+      version: 20.8.0
+      sourceRef:
+        kind: HelmRepository
+        name: traefik
+        namespace: flux-system
+  install:
+    createNamespace: true
+    crds: CreateReplace
+    remediation:
+      retries: 3
+  upgrade:
+    crds: CreateReplace
+    remediation:
+      retries: 3
+  values:
+    # Options for the main traefik service, where the entrypoints traffic comes
+    # from.
+    service:
+      enabled: true
+      ## Single service is using `MixedProtocolLBService` feature gate.
+      ## When set to false, it will create two Service, one for TCP and one for UDP.
+      single: true
+      type: NodePort
+      # Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config)
+      annotations: {}
+      # Additional annotations for TCP service only
+      annotationsTCP: {}
+      # Additional annotations for UDP service only
+      annotationsUDP: {}
+      # Additional service labels (e.g. for filtering Service by custom labels)
+      labels: {}
+      # Additional entries here will be added to the service spec.
+      # Cannot contain type, selector or ports entries.
+      spec:
+        {}
+        # externalTrafficPolicy: Cluster
+        # loadBalancerIP: "1.2.3.4"
+        # clusterIP: "2.3.4.5"
+      loadBalancerSourceRanges:
+        []
+        # - 192.168.0.1/32
+        # - 172.16.0.0/16
+      externalIPs:
+        - 94.237.55.69
+        - 94.237.48.88
