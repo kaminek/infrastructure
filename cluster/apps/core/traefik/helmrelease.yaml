@@ -24,9 +24,10 @@ spec:
     remediation:
       retries: 3
   values:
+    hostNetwork: true
     deployment:
       kind: DaemonSet
-    hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
     service:
       enabled: true
       single: true
@@ -39,3 +40,11 @@ spec:
     logs:
       general:
         level: INFO
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: '{{ template "traefik.name" . }}'
+                app.kubernetes.io/instance: "{{ .Release.Name }}-{{ .Release.Namespace }}"
+            topologyKey: kubernetes.io/hostname
