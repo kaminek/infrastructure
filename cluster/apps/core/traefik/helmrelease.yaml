@@ -28,11 +28,12 @@ spec:
       enabled: true
       single: true
       type: NodePort
-      loadBalancerSourceRanges: []
       externalIPs:
         - 94.237.55.69
         - 94.237.48.88
-    globalArguments: []
+    globalArguments: [] # dont send stats
     logs:
       general:
-        level: INFO
+        level: DEBUG
+      access:
+        enabled: true
