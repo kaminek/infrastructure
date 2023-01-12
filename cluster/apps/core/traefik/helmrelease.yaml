@@ -24,16 +24,9 @@ spec:
     remediation:
       retries: 3
   values:
-    service:
-      enabled: true
-      single: true
-      type: NodePort
-      externalIPs:
-        - 94.237.55.69
-        - 94.237.48.88
     globalArguments: [] # dont send stats
     logs:
       general:
-        level: DEBUG
+        level: INFO
       access:
         enabled: true
