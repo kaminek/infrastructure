@@ -11,6 +11,7 @@ resource "upcloud_server" "worker" {
   plan     = local.flavour
   hostname = "node${count.index}"
   zone     = local.region
+  firewall = true
 
   template {
     storage = "01000000-0000-4000-8000-000030220200"
@@ -79,4 +80,33 @@ resource "cloudflare_record" "cluster" {
   name    = "cluster"
   value   = upcloud_server.worker[count.index].network_interface[0].ip_address
   type    = "A"
+}
+
+resource "upcloud_firewall_rules" "nodes" {
+  count     = local.fleet_count
+  server_id = upcloud_server.worker[count.index].id
+
+  firewall_rule {
+    action                 = "accept"
+    comment                = "Allow SSH"
+    destination_port_start = "22"
+    destination_port_end   = "22"
+    direction              = "in"
+    family                 = "IPv4"
+    protocol               = "tcp"
+    source_address_start   = data.sops_file.secrets.data.allowed_ip
+    source_address_end     = data.sops_file.secrets.data.allowed_ip
+  }
+
+  firewall_rule {
+    action                 = "accept"
+    comment                = "Allow K8s api server"
+    destination_port_start = "6443"
+    destination_port_end   = "6443"
+    direction              = "in"
+    family                 = "IPv4"
+    protocol               = "tcp"
+    source_address_start   = data.sops_file.secrets.data.allowed_ip
+    source_address_end     = data.sops_file.secrets.data.allowed_ip
+  }
 }
