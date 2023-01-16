@@ -8,9 +8,19 @@ terraform {
       source  = "integrations/github"
       version = "~> 5.0"
     }
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 3.0"
+    }
+    sops = {
+      source  = "carlpett/sops"
+      version = "~> 0.5"
+    }
   }
 }
 
 provider "upcloud" {}
 
 provider "github" {}
+
+provider "cloudflare" {}

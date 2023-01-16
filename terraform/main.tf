@@ -1,8 +1,9 @@
 
 locals {
-  fleet_count = 1
-  flavour     = "2xCPU-4GB"
-  region      = "uk-lon1"
+  fleet_count        = 3
+  flavour            = "2xCPU-4GB"
+  region             = "uk-lon1"
+  cloudflare_zone_id = data.sops_file.secrets.data.cloudflare_zone_id
 }
 
 resource "upcloud_server" "worker" {
@@ -42,6 +43,16 @@ resource "upcloud_server" "worker" {
   metadata = true
 }
 
+resource "upcloud_server_group" "main" {
+  title         = "cluster"
+  anti_affinity = true
+  labels = {
+    cluster = "homelab"
+    env     = "prod"
+  }
+  members = [upcloud_server.worker]
+}
+
 resource "upcloud_network" "k8s_vpc" {
   name = "k8s-vpc"
   zone = local.region
@@ -52,4 +63,12 @@ resource "upcloud_network" "k8s_vpc" {
     dhcp_default_route = false
     family             = "IPv4"
   }
+}
+
+resource "cloudflare_record" "example" {
+  count   = local.fleet_count
+  zone_id = local.cloudflare_zone_id
+  name    = "node${count.index}"
+  value   = upcloud_server.worker[count.index].network_interface[0].ip_address
+  type    = "A"
 }
