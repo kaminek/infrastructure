@@ -74,8 +74,9 @@ resource "cloudflare_record" "nodes" {
 }
 
 resource "cloudflare_record" "cluster" {
+  count   = local.fleet_count
   zone_id = local.cloudflare_zone_id
   name    = "cluster"
+  value   = upcloud_server.worker[count.index].network_interface[0].ip_address
   type    = "A"
-  value   = upcloud_server.worker[*].network_interface[0].ip_address
 }
