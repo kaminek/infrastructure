@@ -87,6 +87,11 @@ resource "upcloud_firewall_rules" "nodes" {
   server_id = upcloud_server.worker[count.index].id
 
   firewall_rule {
+    action    = "drop"
+    direction = "in"
+  }
+
+  firewall_rule {
     action                 = "accept"
     comment                = "Allow SSH"
     destination_port_start = "22"
