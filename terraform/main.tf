@@ -50,7 +50,7 @@ resource "upcloud_server_group" "main" {
     cluster = "homelab"
     env     = "prod"
   }
-  members = [upcloud_server.worker]
+  members = upcloud_server.worker[*].id
 }
 
 resource "upcloud_network" "k8s_vpc" {
