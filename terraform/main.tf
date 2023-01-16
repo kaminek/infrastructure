@@ -65,10 +65,17 @@ resource "upcloud_network" "k8s_vpc" {
   }
 }
 
-resource "cloudflare_record" "example" {
+resource "cloudflare_record" "nodes" {
   count   = local.fleet_count
   zone_id = local.cloudflare_zone_id
-  name    = "node${count.index}"
+  name    = "node${count.index}.cluster"
   value   = upcloud_server.worker[count.index].network_interface[0].ip_address
   type    = "A"
+}
+
+resource "cloudflare_record" "cluster" {
+  zone_id = local.cloudflare_zone_id
+  name    = "cluster"
+  type    = "A"
+  value   = upcloud_server.worker[*].network_interface[0].ip_address
 }
