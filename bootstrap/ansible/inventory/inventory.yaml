@@ -7,8 +7,6 @@ all:
           children:
             controllers:
               hosts:
-                node0.homelab.local:
-                node1.homelab.local:
-                node2.homelab.local:
-            # workers:
-            #   hosts:
+                node0:
+                node1:
+                node2:

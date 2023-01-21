@@ -27,10 +27,11 @@ k3s_etcd_datastore: true
 
 # (dict) k3s settings for all control-plane nodes
 k3s_server:
-  node-ip: "{{ vpc_private_ipv4_address }}"
+  node-ip: "{{ ansible_eth1.ipv4.address }}"
+  advertise-address: "{{ ansible_eth1.ipv4.address }}"
   # Disable Docker - this will use the default containerd CRI
   docker: false
-  flannel-backend: "none" # This needs to be in quotes
+  flannel-backend: 'none' # This needs to be in quotes
   disable:
     - flannel
     - traefik
@@ -39,6 +40,7 @@ k3s_server:
     # - local-storage
   disable-network-policy: true
   disable-cloud-controller: true
+  disable-kube-proxy: true
   write-kubeconfig-mode: "400"
   # Network CIDR to use for pod IPs
   cluster-cidr: "10.42.0.0/16"
@@ -56,9 +58,9 @@ k3s_server:
     - "node-monitor-period=15s"
     - "node-monitor-grace-period=16s"
     - "pod-eviction-timeout=20s"
-  kube-proxy-arg:
-    # Required to monitor component with kube-prometheus-stack
-    - "metrics-bind-address=0.0.0.0"
+  # kube-proxy-arg: # using cilium
+  #   # Required to monitor component with kube-prometheus-stack
+  #   - "metrics-bind-address=0.0.0.0"
   kube-scheduler-arg:
     # Required to monitor component with kube-prometheus-stack
     - "bind-address=0.0.0.0"
