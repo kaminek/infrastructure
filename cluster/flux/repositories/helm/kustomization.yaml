@@ -11,3 +11,4 @@ resources:
   - ./jetstack.yaml
   - ./traefik.yaml
   - ./prometheus-community.yaml
+  - metallb.yaml
