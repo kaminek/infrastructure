@@ -1,6 +1,6 @@
 
 locals {
-  fleet_count        = 3
+  fleet_count        = 0
   flavour            = "2xCPU-4GB"
   region             = "uk-lon1"
   cloudflare_zone_id = data.sops_file.secrets.data.cloudflare_zone_id
