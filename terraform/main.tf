@@ -1,12 +1,12 @@
 
 locals {
-  fleet_count        = 0
+  fleet_count        = 3
   flavour            = "2xCPU-4GB"
   region             = "uk-lon1"
   cloudflare_zone_id = data.sops_file.secrets.data.cloudflare_zone_id
 }
 
-resource "upcloud_server" "worker" {
+resource "upcloud_server" "node" {
   count    = local.fleet_count
   plan     = local.flavour
   hostname = "node${count.index}"
@@ -34,7 +34,7 @@ resource "upcloud_server" "worker" {
   labels = {
     cluster = "homelab"
     env     = "prod"
-    node    = "worker${count.index}"
+    node    = "node${count.index}"
   }
 
   login {
@@ -51,7 +51,7 @@ resource "upcloud_server_group" "main" {
     cluster = "homelab"
     env     = "prod"
   }
-  members = upcloud_server.worker[*].id
+  members = upcloud_server.node[*].id
 }
 
 resource "upcloud_network" "k8s_vpc" {
@@ -70,7 +70,7 @@ resource "cloudflare_record" "nodes" {
   count   = local.fleet_count
   zone_id = local.cloudflare_zone_id
   name    = "node${count.index}.cluster"
-  value   = upcloud_server.worker[count.index].network_interface[0].ip_address
+  value   = upcloud_server.node[count.index].network_interface[0].ip_address
   type    = "A"
 }
 
@@ -78,13 +78,13 @@ resource "cloudflare_record" "cluster" {
   count   = local.fleet_count
   zone_id = local.cloudflare_zone_id
   name    = "cluster"
-  value   = upcloud_server.worker[count.index].network_interface[0].ip_address
+  value   = upcloud_server.node[count.index].network_interface[0].ip_address
   type    = "A"
 }
 
 resource "upcloud_firewall_rules" "nodes" {
   count     = local.fleet_count
-  server_id = upcloud_server.worker[count.index].id
+  server_id = upcloud_server.node[count.index].id
 
   firewall_rule {
     action                 = "accept"
