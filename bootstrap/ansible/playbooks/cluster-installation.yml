@@ -28,21 +28,11 @@
       vars:
         k3s_state: installed
 
-    - name: Get absolute path to this Git repository
-      delegate_to: localhost
-      connection: local
-      become: false
-      run_once: true
-      check_mode: false
-      ansible.builtin.command: |-
-        git rev-parse --show-toplevel
-      register: repo_abs_path
-
     - name: Copy kubeconfig to provision folder
       run_once: true
       ansible.builtin.fetch:
         src: "/etc/rancher/k3s/k3s.yaml"
-        dest: "{{ repo_abs_path.stdout }}/cluster/kubeconfig"
+        dest: "/tmp/kubeconfig"
         flat: true
       when:
         - k3s_control_node is defined
@@ -54,59 +44,45 @@
       become: false
       run_once: true
       ansible.builtin.replace:
-        path: "{{ repo_abs_path.stdout }}/cluster/kubeconfig"
+        path: "/tmp/kubeconfig"
         regexp: "https://127.0.0.1:6443"
         replace: "https://{{ k3s_cluster_fqdn }}:6443"
 
-    - name: Add custom taint required by Cilium.
-      kubernetes.core.k8s_taint:
-        state: present
-        name: "{{ inventory_hostname }}"
+    - name: Backup kubeconfig file
+      delegate_to: localhost
+      connection: local
+      become: false
+      run_once: true
+      ansible.builtin.copy:
+        src: ~/.kube/config
+        dest: ~/.kube/config.bak
+
+    - name: Merge kubeconfig files
+      delegate_to: localhost
+      connection: local
+      become: false
+      run_once: true
+      ansible.builtin.shell: KUBECONFIG=~/.kube/config:/tmp/kubeconfig kubectl config view --flatten > ~/.kube/config.merged && mv ~/.kube/config.merged ~/.kube/config && chmod 400 ~/.kube/config
+
+    - name: Wait for custom manifests to rollout
+      when:
+        - k3s_primary_control_node
+        - (k3s_server_manifests_templates | length > 0
+            or k3s_server_manifests_urls | length > 0)
+      kubernetes.core.k8s_info:
         kubeconfig: /etc/rancher/k3s/k3s.yaml
-        taints:
-          - effect: NoExecute
-            key: "node.cilium.io/agent-not-ready"
-            value: "true"
-
-    - name: Add stable chart repo
-      run_once: true
-      kubernetes.core.helm_repository:
-        name: cilium
-        repo_url: "https://helm.cilium.io/"
-
-    - name: Deploy a custom CNI (Cilium)
-      run_once: true
-      kubernetes.core.helm:
-        name: cilium
-        release_namespace: kube-system
-        chart_ref: cilium/cilium
-        chart_version: "{{ k3s_cilium_chart_version }}"
-        kubeconfig: "/etc/rancher/k3s/k3s.yaml"
-        values: "{{ lookup('template', 'cilium-values.yaml') | from_yaml }}"
-
-    # Cleaning up the manifests from the /var/lib/rancher/k3s/server/manifests
-    # directory is needed because k3s has an awesome "feature" to always deploy
-    # these on restarting the k3s systemd service. Removing them does NOT
-    # uninstall the manifests.
-
-    # Removing them means we can manage the lifecycle of these components
-    # outside of the /var/lib/rancher/k3s/server/manifests directory
-
-    # FIXME(ansible): Check for deployments to be happy rather than waiting
-    - name: Wait for k3s to finish installing the deployed manifests
-      ansible.builtin.wait_for:
-        timeout: 15
-      when: k3s_server_manifests_templates | length > 0
-        or k3s_server_manifests_dir | length > 0
-
-    - name: Remove deployed manifest templates
-      ansible.builtin.file:
-        path: "{{ k3s_server_manifests_dir }}/{{ item | basename | regex_replace('\\.j2$', '') }}"
-        state: absent
-      loop: "{{ k3s_server_manifests_templates | default([]) }}"
-
-    - name: Remove deployed manifest urls
-      ansible.builtin.file:
-        path: "{{ k3s_server_manifests_dir }}/{{ item.filename }}"
-        state: absent
-      loop: "{{ k3s_server_manifests_urls | default([]) }}"
+        kind: "{{ item.kind }}"
+        name: "{{ item.name }}"
+        namespace: "{{ item.namespace | default('') }}"
+        wait: true
+        wait_sleep: 10
+        wait_timeout: 360
+      loop:
+        - { name: cilium, kind: HelmChart, namespace: kube-system }
+        - { name: coredns, kind: HelmChart, namespace: kube-system }
+        - { name: policy, kind: CiliumL2AnnouncementPolicy }
+        - { name: pool, kind: CiliumLoadBalancerIPPool }
+        - { name: podmonitors.monitoring.coreos.com, kind: CustomResourceDefinition }
+        - { name: prometheusrules.monitoring.coreos.com, kind: CustomResourceDefinition }
+        - { name: scrapeconfigs.monitoring.coreos.com, kind: CustomResourceDefinition }
+        - { name: servicemonitors.monitoring.coreos.com, kind: CustomResourceDefinition }

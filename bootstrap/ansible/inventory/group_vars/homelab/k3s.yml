@@ -1,13 +1,11 @@
 ---
-#
 # Below vars are for the xanmanning.k3s role
 # ...see https://github.com/PyratLabs/ansible-role-k3s
 #
 # https://rancher.com/docs/k3s/latest/en/installation/install-options/server-config/
 
-# (string) Use a specific version of k3s
 # renovate: datasource=github-releases depName=k3s-io/k3s
-k3s_release_version: "v1.24.8+k3s1"
+k3s_release_version: "v1.28.2+k3s1"
 
 # (bool) Install using hard links rather than symbolic links.
 k3s_install_hard_links: true
@@ -16,65 +14,28 @@ k3s_install_hard_links: true
 k3s_become: false
 
 # (bool) Enable debug logging on the k3s service
-k3s_debug: false
+k3s_debug: true
+
+k3s_etcd_datastore: true
 
 # (bool) Allow the use of unsupported configurations in k3s
 k3s_use_unsupported_config: true
 
-# use ha controllers
-k3s_control_node: true
-k3s_etcd_datastore: true
+k3s_cluster_fqdn: "cluster.kaminek.me"
 
-# (dict) k3s settings for all control-plane nodes
-k3s_server:
-  node-ip: "{{ ansible_eth1.ipv4.address }}"
-  advertise-address: "{{ ansible_eth1.ipv4.address }}"
-  # Disable Docker - this will use the default containerd CRI
-  docker: false
-  flannel-backend: 'none' # This needs to be in quotes
-  disable:
-    - flannel
-    - traefik
-    - servicelb
-    - metrics-server
-    # - local-storage
-  disable-network-policy: true
-  disable-cloud-controller: true
-  disable-kube-proxy: true
-  write-kubeconfig-mode: "400"
-  # Network CIDR to use for pod IPs
-  cluster-cidr: "10.42.0.0/16"
-  # Network CIDR to use for service IPs
-  service-cidr: "10.43.0.0/16"
-  kubelet-arg:
-    # Allow pods to be rescheduled quicker in the case of a node failure
-    # https://github.com/k3s-io/k3s/issues/1264
-    - "node-status-update-frequency=10s"
-  kube-controller-manager-arg:
-    # Required to monitor component with kube-prometheus-stack
-    - "bind-address=0.0.0.0"
-    # Allow pods to be rescheduled quicker in the case of a node failure
-    # https://github.com/k3s-io/k3s/issues/1264
-    - "node-monitor-period=15s"
-    - "node-monitor-grace-period=16s"
-    - "pod-eviction-timeout=20s"
-  # kube-proxy-arg: # using cilium
-  #   # Required to monitor component with kube-prometheus-stack
-  #   - "metrics-bind-address=0.0.0.0"
-  kube-scheduler-arg:
-    # Required to monitor component with kube-prometheus-stack
-    - "bind-address=0.0.0.0"
-  kube-apiserver-arg:
-    # XXX: Enable the audit log
-    # - "--audit-log-path=/var/lib/rancher/k3s/server/audit.log"
-    # - "--audit-policy-file=/var/lib/rancher/k3s/server/audit.yaml"
-    # - "--audit-log-maxage=2"
-    # Required for HAProxy health-checks
-    - "anonymous-auth=false" # true
-    # Allow pods to be rescheduled quicker in the case of a node failure
-    # https://github.com/k3s-io/k3s/issues/1264
-    - "default-not-ready-toleration-seconds=20"
-    - "default-unreachable-toleration-seconds=20"
+# /var/lib/rancher/k3s/server/manifests
+k3s_server_manifests_urls:
+  # Essential Prometheus Operator CRDs (the rest are installed with the kube-prometheus-stack helm release)
+  - url: https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.66.0/example/prometheus-operator-crd/monitoring.coreos.com_podmonitors.yaml
+    filename: custom-prometheus-podmonitors.yaml
+  - url: https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.66.0/example/prometheus-operator-crd/monitoring.coreos.com_prometheusrules.yaml
+    filename: custom-prometheus-prometheusrules.yaml
+  - url: https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.66.0/example/prometheus-operator-crd/monitoring.coreos.com_scrapeconfigs.yaml
+    filename: custom-prometheus-scrapeconfigs.yaml
+  - url: https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.66.0/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml
+    filename: custom-prometheus-servicemonitors.yaml
 
-# cilium chart values
-k3s_cilium_chart_version: v1.12.4
+# /var/lib/rancher/k3s/server/manifests
+k3s_server_manifests_templates:
+  - cilium-helmchart.yaml.j2
+  - coredns-helmchart.yaml.j2

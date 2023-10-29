@@ -1,0 +1,44 @@
+---
+# use ha controllers
+k3s_control_node: true
+
+# (dict) k3s settings for all control-plane nodes
+k3s_server:
+  node-ip: "{{ ansible_eth1.ipv4.address }}"
+  node-external-ip: "{{ ansible_eth1.ipv4.address }}"
+  advertise-address: "{{ ansible_eth1.ipv4.address }}"
+  tls-san:
+    - "{{ k3s_cluster_fqdn }}"
+  # Disable Docker - this will use the default containerd CRI
+  docker: false
+  flannel-backend: "none" # This needs to be in quotes
+  disable:
+    - flannel
+    - traefik
+    - servicelb
+    - metrics-server
+    - coredns
+    # - local-storage
+  disable-network-policy: true
+  disable-cloud-controller: true
+  disable-kube-proxy: true
+  write-kubeconfig-mode: "0400"
+  # Network CIDR to use for pod IPs
+  cluster-cidr: "10.42.0.0/16"
+  # Network CIDR to use for service IPs
+  service-cidr: "10.43.0.0/16"
+  kube-controller-manager-arg:
+    # Required to monitor component with kube-prometheus-stack
+    - "bind-address=0.0.0.0"
+  # kube-proxy-arg: # using cilium
+  #   # Required to monitor component with kube-prometheus-stack
+  #   - "metrics-bind-address=0.0.0.0"
+  kube-scheduler-arg:
+    # Required to monitor component with kube-prometheus-stack
+    - "bind-address=0.0.0.0"
+  kube-apiserver-arg:
+    # XXX: Enable the audit log
+    # - "--audit-log-path=/var/lib/rancher/k3s/server/audit.log"
+    # - "--audit-policy-file=/var/lib/rancher/k3s/server/audit.yaml"
+    # - "--audit-log-maxage=2"
+    - "anonymous-auth=true"

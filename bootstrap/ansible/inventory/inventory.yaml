@@ -5,8 +5,8 @@ all:
       children:
         homelab:
           children:
-            controllers:
+            controller:
               hosts:
-                node0:
+                node0: # primary
                 node1:
                 node2:

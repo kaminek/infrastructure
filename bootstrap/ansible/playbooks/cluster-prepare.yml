@@ -11,13 +11,6 @@
     - name: Pausing for 5 seconds...
       ansible.builtin.pause:
         seconds: 5
-  tasks:
-    - name: Locale
-      block:
-        - name: Locale | Set timezone
-          community.general.timezone:
-            name: "{{ timezone | default('Etc/UTC') }}"
-
     - name: Networking
       block:
         - name: Networking | Set hostname to inventory hostname
@@ -30,22 +23,36 @@
             block: |
               127.0.1.1   {{ inventory_hostname }}
 
+        - name: Add IP address of all hosts to all hosts
+          lineinfile:
+            dest: /etc/hosts
+            regexp: '.*{{ item }}$'
+            line: "{{ hostvars[item].ansible_eth1.ipv4.address }} {{item}}"
+            state: present
+          when: hostvars[item].ansible_eth1.ipv4.address is defined
+          with_items: "{{ groups.all }}"
+
+        - name: Networking | Disable DNS from DHCP
+          ansible.builtin.shell: netplan set ethernets.eth0.dhcp4-overrides.use-dns=false && netplan apply
+
+        - name: setup proper DNS config
+          ansible.builtin.copy:
+            dest: /etc/systemd/resolved.conf
+            content: |
+              [Resolve]
+              DNS=1.1.1.1
+              Domains=~.
+          notify: Restart resolved
+
+  tasks:
+    - name: Locale
+      block:
+        - name: Locale | Set timezone
+          community.general.timezone:
+            name: "{{ timezone | default('Etc/UTC') }}"
+
     - name: Packages
       block:
-        - name: Helm repo package
-          block:
-            - name: helm keyring
-              ansible.builtin.apt_key:
-                url: https://baltocdn.com/helm/signing.asc
-
-            - name: Set DPKG architecture
-              set_fact:
-                dpkg_arch: "{{ 'amd64' if ansible_architecture == 'x86_64' else ansible_architecture }}"
-            - name: helm apt source
-              ansible.builtin.apt_repository:
-                repo: "deb [arch={{ dpkg_arch }}] https://baltocdn.com/helm/stable/debian/ all main"
-                state: present
-
         - name: Install Packages
           block:
             - name: Distribution Packages | Install required packages
@@ -110,3 +117,7 @@
     - name: Reboot
       ansible.builtin.reboot:
         msg: Rebooting nodes
+    - name: Restart resolved
+      ansible.builtin.systemd:
+        name: systemd-resolved
+        state: restarted

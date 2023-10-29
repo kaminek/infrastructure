@@ -11,25 +11,26 @@ vars:
 tasks:
   init:
     desc: Install / Upgrade Ansible galaxy deps
-    dir: provision/ansible
     cmds:
       - ansible-galaxy install -r {{.ANSIBLE_DIR}}/requirements.yml --force
       - ansible-galaxy collection install -r {{.ANSIBLE_DIR}}/requirements.yml --force
 
   list:
     desc: List all the hosts
-    dir: provision/ansible
     cmds:
       - ansible all --list-hosts
 
   prepare:
     desc: Prepare all the k8s nodes for running k3s
-    dir: provision/ansible
     cmds:
       - ansible-playbook {{.ANSIBLE_PLAYBOOK_DIR}}/cluster-prepare.yml
 
   install:
     desc: Install Kubernetes on the nodes
-    dir: provision/ansible
     cmds:
       - ansible-playbook {{.ANSIBLE_PLAYBOOK_DIR}}/cluster-installation.yml
+
+  nuke:
+    desc: Nuke the cluster
+    cmds:
+      - ansible-playbook {{.ANSIBLE_PLAYBOOK_DIR}}/cluster-nuke.yml
