@@ -112,7 +112,7 @@ resource "upcloud_firewall_rules" "nodes" {
 
   firewall_rule {
     action                 = "accept"
-    comment                = "Allow DNS"
+    comment                = "Allow DNSoUDP"
     destination_port_start = "53"
     destination_port_end   = "53"
     direction              = "in"
@@ -121,6 +121,19 @@ resource "upcloud_firewall_rules" "nodes" {
     source_address_start   = "1.1.1.1"
     source_address_end     = "1.1.1.1"
   }
+
+  firewall_rule {
+    action                 = "accept"
+    comment                = "Allow DNSoTCP"
+    destination_port_start = "53"
+    destination_port_end   = "53"
+    direction              = "in"
+    family                 = "IPv4"
+    protocol               = "tcp"
+    source_address_start   = "1.1.1.1"
+    source_address_end     = "1.1.1.1"
+  }
+
   firewall_rule {
     action    = "drop"
     direction = "in"
