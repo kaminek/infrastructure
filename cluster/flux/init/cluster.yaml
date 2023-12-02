@@ -6,6 +6,7 @@ metadata:
   name: infrastructure
   namespace: flux-system
 spec:
+  versions: v1
   interval: 30m
   url: https://github.com/kaminek/infrastructure
   ref:
