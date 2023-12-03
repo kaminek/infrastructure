@@ -12,7 +12,10 @@ tasks:
     cmds:
       - kubectl apply --server-side --kustomize {{.K8S_BOOTSTRAP_DIR}}/flux
       - cat {{.SOPS_AGE_KEY_FILE}} | kubectl -n flux-system create secret generic sops-age --from-file=age.agekey=/dev/stdin
+      - sops --decrypt --in-place {{.CLUSTER_DIR}}/flux/config/cluster-secrets.sops.env
+      - kubectl apply --kustomize {{.CLUSTER_DIR}}/flux/config
       - kubectl apply --kustomize {{.CLUSTER_DIR}}/flux/init
+      - defer: sops --encrypt --in-place {{.CLUSTER_DIR}}/flux/config/cluster-secrets.sops.env
       - task: reconcile
     preconditions:
       - sh: test -f {{.SOPS_AGE_KEY_FILE}}

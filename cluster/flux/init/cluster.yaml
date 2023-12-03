@@ -6,7 +6,6 @@ metadata:
   name: infrastructure
   namespace: flux-system
 spec:
-  versions: v1
   interval: 30m
   url: https://github.com/kaminek/infrastructure
   ref:
@@ -35,3 +34,11 @@ spec:
     provider: sops
     secretRef:
       name: sops-age
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-settings
+        optional: false
+      - kind: Secret
+        name: cluster-secrets
+        optional: false
