@@ -8,8 +8,6 @@ metadata:
 spec:
   path: ./cluster/apps/core/traefik/app
   targetNamespace: networking
-  dependsOn:
-    - name: external-secrets-stores
   sourceRef:
     kind: GitRepository
     name: infrastructure
