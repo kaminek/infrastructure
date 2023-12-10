@@ -3,13 +3,12 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: traefik
-  namespace: core
 spec:
   interval: 15m
   chart:
     spec:
       chart: traefik
-      version: 20.8.0
+      version: 26.0.0
       sourceRef:
         kind: HelmRepository
         name: traefik
@@ -25,8 +24,81 @@ spec:
       retries: 3
   values:
     globalArguments: [] # dont send stats
+
+    deployment:
+      enabled: true
+      kind: Deployment
+      replicas: 2
+
+    podDisruptionBudget:
+      enabled: true
+      maxUnavailable: 1
+
+    ingressClass:
+      enabled: true
+      isDefaultClass: true
+
+    ingressRoute:
+      healthcheck:
+        enabled: true
+
     logs:
       general:
         level: INFO
       access:
         enabled: true
+
+    ports:
+      websecure:
+        ## Set TLS at the entrypoint
+        ## https://doc.traefik.io/traefik/routing/entrypoints/#tls
+        tls:
+          enabled: true
+          # this is the name of a TLSOption definition
+          options: ""
+          certResolver: ""
+          domains: []
+          # - main: example.com
+          #   sans:
+          #     - foo.example.com
+          #     - bar.example.com
+        #
+        # -- One can apply Middlewares on an entrypoint
+        # https://doc.traefik.io/traefik/middlewares/overview/
+        # https://doc.traefik.io/traefik/routing/entrypoints/#middlewares
+        # -- /!\ It introduces here a link between your static configuration and your dynamic configuration /!\
+        # It follows the provider naming convention: https://doc.traefik.io/traefik/providers/overview/#provider-namespace
+        # middlewares:
+        #   - namespace-name1@kubernetescrd
+        #   - namespace-name2@kubernetescrd
+        middlewares: []
+
+    service:
+      enabled: true
+      single: true
+      type: LoadBalancer
+      annotations:
+        metallb.universe.tf/loadBalancerIPs: 10.32.0.245
+
+    # -- The resources parameter defines CPU and memory requirements and limits for Traefik's containers.
+    resources: {}
+    # requests:
+    #   cpu: "100m"
+    #   memory: "50Mi"
+    # limits:
+    #   cpu: "300m"
+    #   memory: "150Mi"
+
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: '{{ template "traefik.name" . }}'
+                app.kubernetes.io/instance: '{{ .Release.Name }}-{{ .Release.Namespace }}'
+            topologyKey: kubernetes.io/hostname
+
+
+    # In some cases, it can avoid the need for additional, extended or adhoc deployments.
+    # See #595 for more details and traefik/tests/values/extra.yaml for example.
+    extraObjects: []
