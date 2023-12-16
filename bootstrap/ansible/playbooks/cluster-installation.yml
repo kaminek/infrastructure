@@ -57,6 +57,17 @@
         src: ~/.kube/config
         dest: ~/.kube/config.bak
 
+    - name: Add iptables NAT rule for ingress
+      iptables:
+        chain: PREROUTING
+        table: nat
+        in_interface: eth0
+        jump: DNAT
+        protocol: tcp
+        destination_port: 443
+        to_destination: 10.32.0.245
+        state: present
+
     - name: Merge kubeconfig files
       delegate_to: localhost
       connection: local
