@@ -33,7 +33,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: cert-manager
-  path: ./cluster/apps/cert-manager/cert-manager/issuers
+  path: ./cluster/apps/cert-manager/cert-manager/issuer
   prune: true
   sourceRef:
     kind: GitRepository
