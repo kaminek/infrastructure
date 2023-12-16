@@ -123,6 +123,16 @@ resource "upcloud_firewall_rules" "nodes" {
   }
 
   firewall_rule {
+    action                 = "accept"
+    comment                = "Allow HTTPS traffic"
+    destination_port_start = "443"
+    destination_port_end   = "443"
+    direction              = "in"
+    family                 = "IPv4"
+    protocol               = "tcp"
+  }
+
+  firewall_rule {
     action    = "drop"
     direction = "in"
   }
