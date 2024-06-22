@@ -27,24 +27,19 @@ spec:
     controller:
       kind: daemonset
       hostNetwork: true
-      hostPort:
-        enabled: true
-        ports:
-          http: 80
-          https: 443
-      service:
-        annotations:
-          external-dns.alpha.kubernetes.io/hostname: external.kaminek.me
-      ingressClassResource:
-        name: external
-        default: false
-        controllerValue: k8s.io/external
-      admissionWebhooks:
-        objectSelector:
-          matchExpressions:
-            - key: ingress-class
-              operator: In
-              values: ["external"]
+      # service:
+      #   annotations:
+      #     external-dns.alpha.kubernetes.io/hostname: external.kaminek.me
+      # ingressClassResource:
+      #   name: external
+      #   default: false
+      #   controllerValue: k8s.io/external
+      # admissionWebhooks:
+      #   objectSelector:
+      #     matchExpressions:
+      #       - key: ingress-class
+      #         operator: In
+      #         values: ["external"]
       allowSnippetAnnotations: true
       config:
         block-user-agents: "GPTBot,~*GPTBot*,ChatGPT-User,~*ChatGPT-User*,Google-Extended,~*Google-Extended*,CCBot,~*CCBot*,Omgilibot,~*Omgilibot*,FacebookBot,~*FacebookBot*" # taken from https://github.com/superseriousbusiness/gotosocial/blob/main/internal/web/robots.go
@@ -77,18 +72,9 @@ spec:
           enabled: true
           namespaceSelector:
             any: true
-      extraArgs:
-        default-ssl-certificate: network/devbu-io-tls
+      # extraArgs:
+      #   default-ssl-certificate: network/devbu-io-tls
       terminationGracePeriodSeconds: 120
-      topologySpreadConstraints:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: DoNotSchedule
-          labelSelector:
-            matchLabels:
-              app.kubernetes.io/name: ingress-nginx
-              app.kubernetes.io/instance: nginx-external
-              app.kubernetes.io/component: controller
       resources:
         requests:
           cpu: 100m
