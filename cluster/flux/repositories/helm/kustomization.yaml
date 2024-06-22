@@ -9,6 +9,5 @@ resources:
   - ./grafana.yaml
   - ./hajimari.yaml
   - ./jetstack.yaml
-  - ./traefik.yaml
   - ./prometheus-community.yaml
-  - metallb.yaml
+  - ./ingress-nginx.yaml
