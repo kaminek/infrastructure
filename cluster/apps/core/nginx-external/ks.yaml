@@ -13,7 +13,7 @@ spec:
   # dependsOn:
   #   - name: certificates
   path: ./cluster/apps/core/nginx-external
-  prune: false
+  prune: true
   sourceRef:
     kind: GitRepository
     name: infrastructure
