@@ -15,8 +15,8 @@ spec:
           cloudflare:
             email: kaminek92@gmail.com
             apiTokenSecretRef:
-              name: cloudflare-secret
-              key: CLOUDFLARE_API_KEY
+              name: cluster-secrets
+              key: CF_API_KEY
         selector:
           dnsZones:
             - kaminek.me
@@ -37,8 +37,8 @@ spec:
           cloudflare:
             email: kaminek92@gmail.com
             apiTokenSecretRef:
-              name: cloudflare-secret
-              key: CLOUDFLARE_API_KEY
+              name: cluster-secrets
+              key: CF_API_KEY
         selector:
           dnsZones:
             - kaminek.me
