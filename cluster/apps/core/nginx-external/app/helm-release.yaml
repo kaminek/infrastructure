@@ -31,10 +31,10 @@ spec:
         type: ClusterIP
         # annotations:
         #   external-dns.alpha.kubernetes.io/hostname: external.kaminek.me
-      # ingressClassResource:
-      #   name: external
-      #   default: false
-      #   controllerValue: k8s.io/external
+      ingressClassResource:
+        name: external
+        default: false
+        controllerValue: k8s.io/external
       # admissionWebhooks:
       #   objectSelector:
       #     matchExpressions:
