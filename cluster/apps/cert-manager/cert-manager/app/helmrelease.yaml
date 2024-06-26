@@ -35,9 +35,9 @@ spec:
         - "1.1.1.1"
         - "9.9.9.9"
     prometheus:
-      enabled: true
+      enabled: false
       servicemonitor:
-        enabled: true
+        enabled: false
         # prometheusInstance: monitoring
     webhook:
       replicaCount: 1
