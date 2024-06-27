@@ -25,12 +25,12 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  # dependsOn:
-  #   - name: prometheus-operator-crds
-  #     namespace: observability
+  dependsOn:
+    - name: prometheus-operator-crds
+      namespace: observability
   values:
     crds:
-      enabled: true
+      enabled: false
     cleanPrometheusOperatorObjectNames: true
     alertmanager:
       ingress:
