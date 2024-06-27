@@ -40,6 +40,10 @@ spec:
           cert-manager.io/cluster-issuer: letsencrypt-production
         ingressClassName: external
         hosts: ["alertmanager.kaminek.me"]
+        tls:
+          - secretName: alertmanager-tls
+            hosts:
+              - alertmanager.kaminek.me
         pathType: Prefix
       alertmanagerSpec:
         useExistingSecret: true
@@ -97,6 +101,10 @@ spec:
         ingressClassName: external
         hosts: ["prometheus.kaminek.me"]
         pathType: Prefix
+        tls:
+          - secretName: prometheus-tls
+            hosts:
+              - prometheus.kaminek.me
       prometheusSpec:
         scrapeInterval: 1m # Must match interval in Grafana Helm chart
         ruleSelectorNilUsesHelmValues: false
