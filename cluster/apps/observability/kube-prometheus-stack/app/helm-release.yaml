@@ -33,6 +33,11 @@ spec:
       enabled: false
     cleanPrometheusOperatorObjectNames: true
     alertmanager:
+      serviceMonitor:
+        relabelings:
+          - action: replace
+            targetLabel: cluster
+            replacement: home-lab
       ingress:
         enabled: true
         annotations:
@@ -67,6 +72,17 @@ spec:
           - action: drop
             sourceLabels: ["__name__"]
             regex: (rest_client_request_duration_seconds_bucket|rest_client_request_duration_seconds_sum|rest_client_request_duration_seconds_count)
+        cAdvisorRelabelings:
+          - action: replace
+            sourceLabels: [__metrics_path__]
+            targetLabel: metrics_path
+          - action: replace
+            targetLabel: cluster
+            replacement: home-lab
+        relabelings:
+          - action: replace
+            targetLabel: cluster
+            replacement: home-lab
     kubeApiServer:
       enabled: true
       serviceMonitor:
@@ -78,8 +94,23 @@ spec:
           - action: drop
             sourceLabels: ["__name__"]
             regex: (apiserver_response_sizes_bucket|apiserver_watch_events_sizes_bucket)
+        relabelings:
+          - action: replace
+            targetLabel: cluster
+            replacement: home-lab
+    coreDns:
+      serviceMonitor:
+        relabelings:
+          - action: replace
+            targetLabel: cluster
+            replacement: home-lab
     kubeControllerManager:
       enabled: true
+      serviceMonitor:
+        relabelings:
+          - action: replace
+            targetLabel: cluster
+            replacement: home-lab
       endpoints: &control-plane
         - 10.32.0.100
         - 10.32.0.101
@@ -87,11 +118,26 @@ spec:
     kubeEtcd:
       enabled: true
       endpoints: *control-plane
+      serviceMonitor:
+        relabelings:
+          - action: replace
+            targetLabel: cluster
+            replacement: home-lab
     kubeScheduler:
       enabled: true
       endpoints: *control-plane
+      serviceMonitor:
+        relabelings:
+          - action: replace
+            targetLabel: cluster
+            replacement: home-lab
     kubeProxy:
       enabled: false
+      serviceMonitor:
+        relabelings:
+          - action: replace
+            targetLabel: cluster
+            replacement: home-lab
     prometheus:
       ingress:
         enabled: true
@@ -107,8 +153,6 @@ spec:
               - prometheus.kaminek.me
       prometheusSpec:
         scrapeInterval: 30s # Must match interval in Grafana Helm chart
-        externalLabels:
-          cluster: home-lab
         ruleSelectorNilUsesHelmValues: false
         serviceMonitorSelectorNilUsesHelmValues: false
         podMonitorSelectorNilUsesHelmValues: false
@@ -147,6 +191,9 @@ spec:
               replacement: $1
               sourceLabels: ["__meta_kubernetes_pod_node_name"]
               targetLabel: kubernetes_node
+            - action: replace
+              targetLabel: cluster
+              replacement: home-lab
     kubeStateMetrics:
       enabled: true
     kube-state-metrics:
@@ -164,5 +211,14 @@ spec:
               replacement: $1
               sourceLabels: ["__meta_kubernetes_pod_node_name"]
               targetLabel: kubernetes_node
+            - action: replace
+              targetLabel: cluster
+              replacement: home-lab
+    prometheusOperator:
+      serviceMonitor:
+        relabelings:
+          - action: replace
+            targetLabel: cluster
+            replacement: home-lab
     grafana:
       enabled: false
