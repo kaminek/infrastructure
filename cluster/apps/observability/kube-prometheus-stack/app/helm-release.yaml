@@ -106,7 +106,9 @@ spec:
             hosts:
               - prometheus.kaminek.me
       prometheusSpec:
-        scrapeInterval: 1m # Must match interval in Grafana Helm chart
+        scrapeInterval: 30s # Must match interval in Grafana Helm chart
+        externalLabels:
+          cluster: home-lab
         ruleSelectorNilUsesHelmValues: false
         serviceMonitorSelectorNilUsesHelmValues: false
         podMonitorSelectorNilUsesHelmValues: false
