@@ -25,22 +25,21 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  dependsOn:
-    - name: prometheus-operator-crds
-      namespace: observability
-    - name: openebs
-      namespace: openebs-system
+  # dependsOn:
+  #   - name: prometheus-operator-crds
+  #     namespace: observability
   values:
     crds:
-      enabled: false
+      enabled: true
     cleanPrometheusOperatorObjectNames: true
     alertmanager:
       ingress:
         enabled: true
         annotations:
-          external-dns.alpha.kubernetes.io/target: internal.devbu.io
-        ingressClassName: internal
-        hosts: ["alertmanager.devbu.io"]
+          external-dns.alpha.kubernetes.io/hostname: alertmanager.kaminek.me
+          cert-manager.io/cluster-issuer: letsencrypt-production
+        ingressClassName: external
+        hosts: ["alertmanager.kaminek.me"]
         pathType: Prefix
       alertmanagerSpec:
         useExistingSecret: true
@@ -48,10 +47,10 @@ spec:
         storage:
           volumeClaimTemplate:
             spec:
-              storageClassName: openebs-hostpath
+              storageClassName: local-path
               resources:
                 requests:
-                  storage: 1Gi
+                  storage: 500Mi
     kubelet:
       enabled: true
       serviceMonitor:
