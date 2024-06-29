@@ -56,3 +56,9 @@ spec:
         enabled: false
     metrics:
       enabled: false
+    profiles:
+      ebpf:
+        enabled: false
+    receivers:
+      deployGrafanaAgentService: false
+      grafanaCloudMetrics: false
