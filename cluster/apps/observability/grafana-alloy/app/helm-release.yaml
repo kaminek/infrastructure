@@ -63,3 +63,7 @@ spec:
       deployGrafanaAgentService: false
       grafanaCloudMetrics:
         enabled: false
+      grpc:
+        enabled: false
+      http:
+        enabled: false
