@@ -61,4 +61,5 @@ spec:
         enabled: false
     receivers:
       deployGrafanaAgentService: false
-      grafanaCloudMetrics: false
+      grafanaCloudMetrics:
+        enabled: false
