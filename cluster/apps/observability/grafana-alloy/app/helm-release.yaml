@@ -52,6 +52,12 @@ spec:
           passwordKey: grafana-loki-password
         hostKey: grafana-loki-endpoint
     logs:
+      pod_logs:
+        extraStageBlocks: |
+          stage.limit {
+            rate  = 500
+            burst = 800
+          }
       journal:
         enabled: false
     metrics:
