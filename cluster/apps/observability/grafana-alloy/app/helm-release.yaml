@@ -29,6 +29,9 @@ spec:
     - name: prometheus-operator-crds
       namespace: observability
   values:
+    cluster:
+      name: homelab
+      platform: k3s
     kube-state-metrics:
       enabled: false
     opencost:
