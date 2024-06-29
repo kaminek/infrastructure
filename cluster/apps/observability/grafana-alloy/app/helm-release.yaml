@@ -1,0 +1,56 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: grafana-alloy
+spec:
+  interval: 30m
+  timeout: 15m
+  chart:
+    spec:
+      chart: k8s-monitoring
+      version: 1.2.0
+      sourceRef:
+        kind: HelmRepository
+        name: grafana
+        namespace: flux-system
+  install:
+    crds: Skip
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    crds: Skip
+    remediation:
+      strategy: rollback
+      retries: 3
+  dependsOn:
+    - name: prometheus-operator-crds
+      namespace: observability
+  values:
+    kube-state-metrics:
+      enabled: false
+    opencost:
+      enabled: false
+    prometheus-node-exporter:
+      enabled: false
+    prometheus-windows-exporter:
+      enabled: false
+    externalServices:
+      loki:
+        secret:
+          create: false
+          name: grafana-credentials-secret
+          namespace: observability
+        basicAuth:
+          usernameKey: grafana-loki-user
+          passwordKey: grafana-loki-password
+        hostKey: grafana-loki-endpoint
+        externalLabels:
+          cluster: home-lab
+    logs:
+      journal:
+        enabled: true
+    metrics:
+      enabled: false

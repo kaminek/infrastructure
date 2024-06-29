@@ -6,3 +6,4 @@ resources:
   - namespace.yaml
   - kube-prometheus-stack/ks.yaml
   - prometheus-operator-crds/ks.yaml
+  - grafana-alloy/ks.yaml
