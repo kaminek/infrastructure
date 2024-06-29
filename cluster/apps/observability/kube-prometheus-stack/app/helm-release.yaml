@@ -37,7 +37,7 @@ spec:
         relabelings:
           - action: replace
             targetLabel: cluster
-            replacement: home-lab
+            replacement: homelab
       ingress:
         enabled: true
         annotations:
@@ -78,11 +78,11 @@ spec:
             targetLabel: metrics_path
           - action: replace
             targetLabel: cluster
-            replacement: home-lab
+            replacement: homelab
         relabelings:
           - action: replace
             targetLabel: cluster
-            replacement: home-lab
+            replacement: homelab
     kubeApiServer:
       enabled: true
       serviceMonitor:
@@ -97,20 +97,20 @@ spec:
         relabelings:
           - action: replace
             targetLabel: cluster
-            replacement: home-lab
+            replacement: homelab
     coreDns:
       serviceMonitor:
         relabelings:
           - action: replace
             targetLabel: cluster
-            replacement: home-lab
+            replacement: homelab
     kubeControllerManager:
       enabled: true
       serviceMonitor:
         relabelings:
           - action: replace
             targetLabel: cluster
-            replacement: home-lab
+            replacement: homelab
       endpoints: &control-plane
         - 10.32.0.100
         - 10.32.0.101
@@ -122,7 +122,7 @@ spec:
         relabelings:
           - action: replace
             targetLabel: cluster
-            replacement: home-lab
+            replacement: homelab
     kubeScheduler:
       enabled: true
       endpoints: *control-plane
@@ -130,14 +130,14 @@ spec:
         relabelings:
           - action: replace
             targetLabel: cluster
-            replacement: home-lab
+            replacement: homelab
     kubeProxy:
       enabled: false
       serviceMonitor:
         relabelings:
           - action: replace
             targetLabel: cluster
-            replacement: home-lab
+            replacement: homelab
     prometheus:
       ingress:
         enabled: true
@@ -193,7 +193,7 @@ spec:
               targetLabel: kubernetes_node
             - action: replace
               targetLabel: cluster
-              replacement: home-lab
+              replacement: homelab
     kubeStateMetrics:
       enabled: true
     kube-state-metrics:
@@ -213,12 +213,12 @@ spec:
               targetLabel: kubernetes_node
             - action: replace
               targetLabel: cluster
-              replacement: home-lab
+              replacement: homelab
     prometheusOperator:
       serviceMonitor:
         relabelings:
           - action: replace
             targetLabel: cluster
-            replacement: home-lab
+            replacement: homelab
     grafana:
       enabled: false

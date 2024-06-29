@@ -51,10 +51,8 @@ spec:
           usernameKey: grafana-loki-user
           passwordKey: grafana-loki-password
         hostKey: grafana-loki-endpoint
-        externalLabels:
-          cluster: home-lab
     logs:
       journal:
-        enabled: true
+        enabled: false
     metrics:
       enabled: false
