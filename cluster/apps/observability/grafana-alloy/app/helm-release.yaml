@@ -53,7 +53,7 @@ spec:
         hostKey: grafana-loki-endpoint
     logs:
       pod_logs:
-        extraStageBlocks: |
+        extraStageBlocks: |-
           stage.limit {
             rate  = 500
             burst = 800
