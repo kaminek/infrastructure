@@ -11,3 +11,4 @@ resources:
   - ./jetstack.yaml
   - ./prometheus-community.yaml
   - ./ingress-nginx.yaml
+  - ./cilium.yaml
