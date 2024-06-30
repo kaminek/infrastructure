@@ -12,3 +12,4 @@ resources:
   - ./prometheus-community.yaml
   - ./ingress-nginx.yaml
   - ./cilium.yaml
+  - ./openebs.yaml
