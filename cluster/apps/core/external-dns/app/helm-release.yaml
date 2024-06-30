@@ -52,6 +52,6 @@ spec:
     txtPrefix: homelab.k8s.
     domainFilters: ["kaminek.me"]
     serviceMonitor:
-      enabled: false
+      enabled: true
     podAnnotations:
       secret.reloader.stakater.com/reload: *secret
