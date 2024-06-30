@@ -29,7 +29,7 @@ spec:
     autoDirectNodeRoutes: true
     bandwidthManager:
       enabled: true
-      bbr: true
+      bbr: false
     bpf:
       masquerade: true
     bgp:
