@@ -83,6 +83,7 @@ spec:
         clusterPoolIPv6MaskSize: 120
     ipv4:
       enabled: true
+    ipv4NativeRoutingCIDR: "10.42.0.0/16"
     ipv6:
       enabled: false
     k8sServiceHost: 127.0.0.1
