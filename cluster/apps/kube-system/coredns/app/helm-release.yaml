@@ -8,7 +8,7 @@ spec:
   interval: 30m
   chart:
     spec:
-      chart: cilium
+      chart: coredns
       version: 1.31.0
       sourceRef:
         kind: HelmRepository
