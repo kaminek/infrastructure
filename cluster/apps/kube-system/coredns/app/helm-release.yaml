@@ -23,6 +23,8 @@ spec:
       strategy: rollback
       retries: 3
   values:
+    fullnameOverride: coredns
+    k8sAppLabelOverride: kube-dns
     replicaCount: 2
     prometheus:
       service:
@@ -31,6 +33,7 @@ spec:
         enabled: true
     service:
       clusterIP: 10.43.0.10
+      name: kube-dns
     serviceAccount:
       create: true
     deployment:
