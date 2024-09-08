@@ -31,8 +31,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: cert-manager
   path: ./cluster/apps/cert-manager/cert-manager/issuer
   prune: true
   sourceRef:
@@ -42,6 +40,8 @@ spec:
     provider: sops
     secretRef:
       name: sops-age
+  dependsOn:
+    - name: cert-manager
   wait: true
   interval: 30m
   retryInterval: 1m

@@ -10,13 +10,17 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  # dependsOn:
-  #   - name: certificates
   path: ./cluster/apps/core/external-dns
   prune: true
   sourceRef:
     kind: GitRepository
     name: infrastructure
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
+  dependsOn:
+    - name: cert-manager
   wait: true
   interval: 30m
   retryInterval: 1m
