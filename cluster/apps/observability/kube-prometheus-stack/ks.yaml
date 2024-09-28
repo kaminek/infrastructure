@@ -17,7 +17,7 @@ spec:
     name: infrastructure
   dependsOn:
     - name: prometheus-operator-crds
-    - name: kube-prometheus-stack
+    - name: alertmanager-config
   wait: true
   interval: 30m
   retryInterval: 1m
