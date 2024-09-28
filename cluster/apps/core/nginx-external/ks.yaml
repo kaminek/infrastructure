@@ -12,7 +12,7 @@ spec:
       app.kubernetes.io/name: *app
   # dependsOn:
   #   - name: certificates
-  path: ./cluster/apps/core/nginx-external
+  path: ./cluster/apps/core/nginx-external/app
   prune: true
   sourceRef:
     kind: GitRepository
