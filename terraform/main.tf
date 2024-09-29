@@ -45,8 +45,8 @@ resource "upcloud_server" "node" {
 }
 
 resource "upcloud_server_group" "main" {
-  title         = "cluster"
-  anti_affinity = true
+  title                = "cluster"
+  anti_affinity_policy = "strict"
   labels = {
     cluster = "homelab"
     env     = "prod"
