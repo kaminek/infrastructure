@@ -2,7 +2,7 @@ terraform {
   required_providers {
     upcloud = {
       source  = "UpCloudLtd/upcloud"
-      version = "~> 2.0"
+      version = "~> 5.0"
     }
     github = {
       source  = "integrations/github"
@@ -14,7 +14,7 @@ terraform {
     }
     sops = {
       source  = "carlpett/sops"
-      version = "~> 0.5"
+      version = "~> 1.0"
     }
   }
 }
