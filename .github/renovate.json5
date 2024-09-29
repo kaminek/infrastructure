@@ -9,7 +9,7 @@
     ":dependencyDashboard",
     ":semanticCommits",
     ":skipStatusChecks",
-    ":timezone(America/New_York)",
+    ":timezone(France/Paris)",
     "github>kaminek/infrastructure//.github/renovate/allowedVersions.json5",
     "github>kaminek/infrastructure//.github/renovate/autoMerge.json5",
     "github>kaminek/infrastructure//.github/renovate/clusters.json5",
@@ -28,17 +28,18 @@
   "ignorePaths": ["**/*.sops.*", "**/.archive/**", "**/resources/**"],
   "flux": {
     "fileMatch": [
-      "(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$"
+      "(^|/)cluster/.+\\.ya?ml(?:\\.j2)?$"
     ]
   },
   "helm-values": {
     "fileMatch": [
-      "(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$"
+      "(^|/)cluster/.+\\.ya?ml(?:\\.j2)?$"
     ]
   },
   "kubernetes": {
     "fileMatch": [
       "(^|/)\\.taskfiles/.+\\.ya?ml(?:\\.j2)?$",
+      "(^|/)cluster/.+\\.ya?ml(?:\\.j2)?$"
       "(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$"
     ]
   }
