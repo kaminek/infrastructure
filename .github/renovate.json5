@@ -9,7 +9,7 @@
     ":dependencyDashboard",
     ":semanticCommits",
     ":skipStatusChecks",
-    ":timezone(France/Paris)",
+    ":timezone(Europe/Paris)",
     "github>kaminek/infrastructure//.github/renovate/allowedVersions.json5",
     "github>kaminek/infrastructure//.github/renovate/autoMerge.json5",
     "github>kaminek/infrastructure//.github/renovate/clusters.json5",
