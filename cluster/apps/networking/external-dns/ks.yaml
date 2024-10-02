@@ -3,20 +3,24 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app nginx-external
+  name: &app external-dns
   namespace: flux-system
 spec:
-  targetNamespace: core
+  targetNamespace: networking
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  # dependsOn:
-  #   - name: certificates
-  path: ./cluster/apps/core/nginx-external/app
+  path: ./cluster/apps/networking/external-dns/app
   prune: true
   sourceRef:
     kind: GitRepository
     name: infrastructure
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
+  dependsOn:
+    - name: cert-manager
   wait: true
   interval: 30m
   retryInterval: 1m
