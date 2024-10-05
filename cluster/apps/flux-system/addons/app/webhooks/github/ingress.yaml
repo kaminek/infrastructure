@@ -19,3 +19,7 @@ spec:
                 name: webhook-receiver
                 port:
                   number: 80
+  tls:
+    - hosts:
+        - webhook-receiver.kaminek.me
+      secretName: webhook-receiver-tls
