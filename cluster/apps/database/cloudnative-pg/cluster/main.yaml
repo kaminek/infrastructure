@@ -1,0 +1,32 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/postgresql.cnpg.io/cluster_v1.json
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: main
+spec:
+  instances: 2
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.4-28
+  primaryUpdateStrategy: unsupervised
+  storage:
+    size: 10Gi
+    storageClass: openebs-hostpath
+  enableSuperuserAccess: true
+  superuserSecret:
+    name: cloudnative-pg-secret
+  postgresql:
+    parameters:
+      max_connections: "100"
+      shared_buffers: 256MB
+  managed:
+    roles:
+      - name: user1
+        passwordSecret:
+          name: cloudnative-pg-secret-user1
+  resources:
+    requests:
+      cpu: 500m
+    limits:
+      memory: 1Gi
+  monitoring:
+    enablePodMonitor: true
