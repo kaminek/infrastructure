@@ -28,6 +28,9 @@ spec:
   dependsOn:
     - name: prometheus-operator-crds
       namespace: observability
+  valuesFrom:
+    - kind: ConfigMap
+      name: ksm-helm-values
   values:
     crds:
       enabled: false
