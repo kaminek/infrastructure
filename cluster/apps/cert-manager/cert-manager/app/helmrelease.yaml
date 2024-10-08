@@ -35,10 +35,16 @@ spec:
         - "1.1.1.1"
         - "9.9.9.9"
     prometheus:
-      enabled: false
+      enabled: true
       servicemonitor:
-        enabled: false
+        enabled: true
         # prometheusInstance: monitoring
+      endpointAdditionalProperties:
+        relabelings:
+          - sourceLabels:
+              - __meta_kubernetes_service_name
+            targetLabel: job
+            replacement: integration/cert-manager
     webhook:
       replicaCount: 1
     cainjector:
