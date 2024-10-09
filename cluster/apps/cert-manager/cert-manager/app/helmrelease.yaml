@@ -38,9 +38,8 @@ spec:
       enabled: true
       servicemonitor:
         enabled: true
-        # prometheusInstance: monitoring
         endpointAdditionalProperties:
-          relabelings:
+          relabelings: # TODO: add cluster label
             - sourceLabels:
                 - __meta_kubernetes_service_name
               targetLabel: job
