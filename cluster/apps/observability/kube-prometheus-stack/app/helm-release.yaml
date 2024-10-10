@@ -162,10 +162,10 @@ spec:
         probeSelectorNilUsesHelmValues: false
         scrapeConfigSelectorNilUsesHelmValues: false
         scrapeClasses:
-          metricRelabelings:
-            - action: replace
-              targetLabel: cluster
-              replacement: homelab
+          - metricRelabelings:
+              - action: replace
+                targetLabel: cluster
+                replacement: homelab
         enableAdminAPI: true
         walCompression: true
         enableFeatures:
