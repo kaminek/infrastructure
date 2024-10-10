@@ -163,6 +163,7 @@ spec:
         scrapeConfigSelectorNilUsesHelmValues: false
         scrapeClasses:
           - name: add-cluster-label
+            default: true
             metricRelabelings:
               - action: replace
                 targetLabel: cluster
