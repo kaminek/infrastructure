@@ -36,11 +36,6 @@ spec:
       enabled: false
     cleanPrometheusOperatorObjectNames: true
     alertmanager:
-      serviceMonitor:
-        relabelings:
-          - action: replace
-            targetLabel: cluster
-            replacement: homelab
       ingress:
         enabled: true
         annotations:
@@ -79,13 +74,6 @@ spec:
           - action: replace
             sourceLabels: [__metrics_path__]
             targetLabel: metrics_path
-          - action: replace
-            targetLabel: cluster
-            replacement: homelab
-        relabelings:
-          - action: replace
-            targetLabel: cluster
-            replacement: homelab
     kubeApiServer:
       enabled: true
       serviceMonitor:
@@ -97,23 +85,8 @@ spec:
           - action: drop
             sourceLabels: ["__name__"]
             regex: (apiserver_response_sizes_bucket|apiserver_watch_events_sizes_bucket)
-        relabelings:
-          - action: replace
-            targetLabel: cluster
-            replacement: homelab
-    coreDns:
-      serviceMonitor:
-        relabelings:
-          - action: replace
-            targetLabel: cluster
-            replacement: homelab
     kubeControllerManager:
       enabled: true
-      serviceMonitor:
-        relabelings:
-          - action: replace
-            targetLabel: cluster
-            replacement: homelab
       endpoints: &control-plane
         - 10.32.0.100
         - 10.32.0.101
@@ -121,26 +94,11 @@ spec:
     kubeEtcd:
       enabled: true
       endpoints: *control-plane
-      serviceMonitor:
-        relabelings:
-          - action: replace
-            targetLabel: cluster
-            replacement: homelab
     kubeScheduler:
       enabled: true
       endpoints: *control-plane
-      serviceMonitor:
-        relabelings:
-          - action: replace
-            targetLabel: cluster
-            replacement: homelab
     kubeProxy:
       enabled: false
-      serviceMonitor:
-        relabelings:
-          - action: replace
-            targetLabel: cluster
-            replacement: homelab
     prometheus:
       ingress:
         enabled: true
@@ -218,14 +176,5 @@ spec:
               replacement: $1
               sourceLabels: ["__meta_kubernetes_pod_node_name"]
               targetLabel: kubernetes_node
-            - action: replace
-              targetLabel: cluster
-              replacement: homelab
-    prometheusOperator:
-      serviceMonitor:
-        relabelings:
-          - action: replace
-            targetLabel: cluster
-            replacement: homelab
     grafana:
       enabled: false
