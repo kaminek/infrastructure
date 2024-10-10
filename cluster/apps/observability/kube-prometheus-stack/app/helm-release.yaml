@@ -161,6 +161,11 @@ spec:
         podMonitorSelectorNilUsesHelmValues: false
         probeSelectorNilUsesHelmValues: false
         scrapeConfigSelectorNilUsesHelmValues: false
+        scrapeClasses:
+          metricRelabelings:
+            - action: replace
+              targetLabel: cluster
+              replacement: homelab
         enableAdminAPI: true
         walCompression: true
         enableFeatures:
