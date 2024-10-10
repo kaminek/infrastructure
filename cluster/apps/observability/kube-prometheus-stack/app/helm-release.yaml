@@ -162,7 +162,8 @@ spec:
         probeSelectorNilUsesHelmValues: false
         scrapeConfigSelectorNilUsesHelmValues: false
         scrapeClasses:
-          - metricRelabelings:
+          - name: add-cluster-label
+            metricRelabelings:
               - action: replace
                 targetLabel: cluster
                 replacement: homelab
