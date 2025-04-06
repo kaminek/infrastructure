@@ -126,10 +126,6 @@ resource "cloudflare_dns_record" "nodes" {
   type    = "A"
   proxied = false
   ttl     = "3600"
-  settings = {
-    ipv4_only = true
-    ipv6_only = true
-  }
 }
 
 resource "cloudflare_dns_record" "cluster" {
@@ -142,8 +138,4 @@ resource "cloudflare_dns_record" "cluster" {
   type    = "A"
   proxied = false
   ttl     = "3600"
-  settings = {
-    ipv4_only = true
-    ipv6_only = true
-  }
 }
